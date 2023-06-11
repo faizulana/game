@@ -19,7 +19,14 @@ class Player:
             return f'Перевод выполнен. Ваш баланс {self.capital} у.е.'
     
     def check_capital(self):
-        ans = f'Ваш баланс {self.capital} у.е.'
+        ans = f'Ваш баланс {self.capital} у.е./n/nТехнологии:/n'
+        if self.technology1: ans+='Название технологии 1/n'
+        if self.technology1: ans+='Название технологии 1/n'
+        if self.technology1: ans+='Название технологии 1/n'
+        if len(property) > 3:
+            ans+= f'Другое имущество: {self.property}/n/n'
+        if self.influencer == True:
+            ans+=f'Ваша аудитория {self.audience} человек/n'
         return ans
     
 class Bank (Player):

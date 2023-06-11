@@ -1,5 +1,5 @@
-from gamebot import identify_company
-from gamebot import expences
+from authentication import identify_company
+from players import expences
 
 def process_request(text):
     components = str(text).lower().split()
