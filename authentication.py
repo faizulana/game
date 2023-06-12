@@ -1,9 +1,9 @@
 import players
 
 codes = {'2464':players.entspace, '2678':players.skillbox, '2267':players.like, '3934':players.smart, 
-         '3578':players.smart, '8937':players.smart, 
+         '3578':players.soe, '8937':players.bank, 
          '8476':players.investor, '4563':players.couch, '4239':players.mentor, '4104':players.expert,
-         '9255':players.add1, '9923':players.add2, '9791':players.add3
+         '9255':players.add1, '9923':players.add2, '9791':players.add3,
          }
 sessions = []
 
@@ -35,6 +35,9 @@ def authenticate (message):
     global sessions
     chat_id = message.chat.id
     code = message.text
+    for s in sessions:
+        if s.chat_id == chat_id:
+            sessions.remove(s)
     auth = Auth (chat_id, code)
     sessions.append(auth)
 

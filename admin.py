@@ -13,16 +13,57 @@ def process_request(text):
             company = identify_company(components[2])
             company.capital+=int(components[3])
             return company.capital
-        if components[1] == 'технологии':
+        if components[1] == 'технология1':
             company = identify_company(components[2])
-            company.technology+=', '
-            company.technology+=' '.join(components[3::])
-            return company.technology
+            company.technology1=True
+            return company.technology1
+        if components[1] == 'технология2':
+            company = identify_company(components[2])
+            company.technology2=True
+            return company.technology2
+        if components[1] == 'технология3':
+            company = identify_company(components[2])
+            company.technology3=True
+            return company.technology3      
+        if components[1] == 'эксперты':
+            company = identify_company(components[2])
+            company.experts+=1
+            return company.experts
+        if components[1] == 'курс':
+            company = identify_company(components[2])
+            company.course+=1
+            return company.course
+        if components[1] == 'наставничество':
+            company = identify_company(components[2])
+            company.mentorship+=1
+            return company.mentorship
+        if components[1] == 'простой':
+            company = identify_company(components[2])
+            company.simple+=1
+            return company.simple
+        if components[1] == 'сложный':
+            company = identify_company(components[2])
+            company.complex+=1
+            return company.complex
+        if components[1] == 'аудитория':
+            company = identify_company(components[2])
+            company.audience+=int(components[3])
+            return company.audience
+        
     if components[0] == '!убрать':
         if components[1] == 'деньги':
             company = identify_company(components[2])
             company.capital-=int(components[3])
             return company.capital
+        if components[1] == 'аудитория':
+            company = identify_company(components[2])
+            company.audience-=int(components[3])
+            return company.audience
+        if components[1] == 'эксперты':
+            company = identify_company(components[2])
+            company.experts-=int(components[3])
+            return company.experts
+        
     if components[0] == '!изменить':
         if components[1] == 'имущество':
             company = identify_company(components[2])
@@ -32,14 +73,26 @@ def process_request(text):
             company = identify_company(components[2])
             company.capital=int(components[3])
             return company.capital
-        if components[1] == 'технологии':
+        if components[1] == 'название':
             company = identify_company(components[2])
-            company.technology=' '.join(components[3::])
-            return company.technology
+            company.name=' '.join(components[3::])
+            return company.name
         if components[1] == 'аудитория':
             company = identify_company(components[2])
-            company.audience+=int(components[3])
-            return company.capital
+            company.audience=int(components[3])
+            return company.audience
+        if components[1] == 'экспертность':
+            company = identify_company(components[2])
+            if company.teacher== True: company.teacher=False
+            elif company.teacher==False: company.teacher=True
+            return company.teacher
+        if components[1] == 'инфлюенсерство':
+            company = identify_company(components[2])
+            if company.influencer== True: company.influencer=False
+            elif company.influencer==False: company.influencer=True
+            return company.influencer
+        
+
     elif components[0] == '!состояние':
         company = identify_company(components[1])
         return f'{str(company.capital)} у.е., {str(company.property)}, технология {str(company.technology)}, аудитория {str(company.audience)} '

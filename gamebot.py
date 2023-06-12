@@ -85,6 +85,7 @@ def answer_message(message):
         bot.reply_to(message, 'Выберите действие', reply_markup=action_markup())
 
         #кнопки в зависимости от типа
+    else:
         check = is_auto(message.text)
         if check is not False:
             #продолжаем вопрошать
@@ -105,12 +106,13 @@ def callback_query(call):
         bot.send_message(call.message.chat.id, 'Кому?', reply_markup=company_markup())
         bot.answer_callback_query(call.id, "Следуйте инструкциям")
     elif call.data == "капитал":
-        bot.answer_callback_query(call.id, "Получен запрос на проверку капитала")
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, a.authorize(chat_id).check_capital())
     elif call.data == "курс":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать курс')
         bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} создал курс')
+        bot.send_message(admin_id, f'{company.name} создал курс: {ans}')
     elif call.data in NAMES:
         requests[call.message.chat.id] += call.data
         bot.send_message(call.message.chat.id, 'Сколько?')
