@@ -1,9 +1,9 @@
-from authentication import identify_company
+from authorize import identify_company
 
 def process_message(company, text):
     components=str(text).lower().split()
     if components[0] == 'перевести':
-        receiver = identify_company(components[3])
+        receiver = identify_company(components[2])
         answer = company.transfer_money(amount=int(components[1]), to=receiver)
         return answer
     

@@ -1,4 +1,4 @@
-from authentication import identify_company
+from authorize import identify_company
 from players import expences
 
 def process_request(text):

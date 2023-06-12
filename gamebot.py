@@ -5,7 +5,7 @@ import json
 from telebot import types
 import player 
 import admin
-import authentication as a
+import authorize as a
 import players
 import autoprocessing as auto
 
@@ -72,9 +72,13 @@ def company_markup():
                                )
     return markup
           
+def request_markup():
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Done", callback_data="entspace"))
+
 @bot.message_handler(commands=['help'])
 def send_welcome(message):
-    bot.reply_to(message, "Объясняю как мной пользоваться")
+    bot.reply_to(message, "Объясняю как мной пользоваться. Можно сделать FAQ")
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -101,10 +105,10 @@ def answer_message(message):
         company = a.authorize(message.chat.id)
         bot.reply_to(message, 'Выберите действие', reply_markup=action_markup(company))
     else:
+        company=a.authorize(message.chat.id)
         check = is_auto(message.text)
         if check is not False:
             give_answer(message)
-            company=a.authorize(message.chat.id)
             bot.reply_to(message, auto.process_message(company=company, text=message.text))
 
         else:
@@ -113,6 +117,7 @@ def answer_message(message):
                 chat_id=admin_id,
                 from_chat_id=message.chat.id,
                 message_id=message.message_id)
+            bot.send_message(chat_id=admin_id, text=f'От {company.name}', reply_markup=request_markup())
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
@@ -121,7 +126,7 @@ def callback_query(call):
         bot.send_message(chat_id, 'Какой компании?', reply_markup=company_markup())
         bot.answer_callback_query(call.id, "Выберите компанию из списка")
     elif call.data == "перевод":
-        bot.send_message(chat_id, 'Введите сообщение вида "перевести *число* компании *название*"')
+        bot.send_message(chat_id, 'Введите сообщение вида "перевести *число* *компания-получатель*"')
     elif call.data == "курс":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать курс')

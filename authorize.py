@@ -48,27 +48,27 @@ def authorize (chat_id):
             return s.company
 
 def identify_company(name):
-    if name == 'skillbox':
+    if name in ['skillbox', 'skill', 'скилбокс', 'скиллбокс', 'скил', 'скилл', 'скиллбоксу', 'скилбоксу', 'скил-бокс', 'скилл-бокс']:
         return players.skillbox
-    elif name == 'entspace':
+    elif name in ['entspace', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс']:
         return players.entspace
-    elif name == 'skolkovo':
+    elif name in ['сколково', 'skolkovo', 'scolcovo', 'scolkovo', 'мшу']:
         return players.skolkovo
-    elif name == 'netology':
+    elif name in ['нетология', 'нетологи', 'netology', 'netologia', 'нэтология']:
         return players.like
-    elif name == 'mentor':
+    elif name in ['ментор', 'mentor']:
         return players.mentor
-    elif name == 'tutor':
+    elif name in ['tutor', 'nastavnik', 'наставник', 'наставни', 'тьютор']:
         return players.tutor
-    elif name == 'couch':
+    elif name in ['коуч', 'коучер', 'кауч', 'couch']:
         return players.couch
-    elif name == 'expert':
+    elif name in ['expert', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс']:
         return players.expert
-    elif name == 'smart':
+    elif name in ['smart', 'lab', 'smartlab', 'smart_lab', 'smart-lab', 'энтспэйс']:
         return players.smart
-    elif name == 'soe':
+    elif name in ['school', 'soe', 'schoolofeducation', 'school-of-education', 'школа', 'сое', 'школа-образования']:
         return players.soe
-    elif name == 'bank':
+    elif name in ['тинькофф', 'тинькоф', 'банк', 'тинькофбанк', 'тинькоффбанк', 'тинькофф-банк', 'bank']:
         return players.bank
-    elif name == 'investor':
+    elif name in ['investor', 'рик', 'инвестор', 'российская', 'российской', 'российская_инвестиционная_компания', 'росийская', 'российской_инвестиционной_компании']:
         return players.investor
