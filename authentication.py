@@ -1,7 +1,7 @@
 import players
 
-codes = {'2464':players.entspace, '2678':players.skillbox, '2267':players.like, '3934':players.smart, 
-         '3578':players.soe, '8937':players.bank, 
+codes = {'2464':players.entspace, '2678':players.skillbox, '2267':players.netology, '3934':players.smart, 
+         '3578':players.soe, '8937':players.bank, '4978':players.tutor,
          '8476':players.investor, '4563':players.couch, '4239':players.mentor, '4104':players.expert,
          '9255':players.add1, '9923':players.add2, '9791':players.add3,
          }
@@ -9,7 +9,7 @@ sessions = []
 
 # ENTSPACE_CODE = 2464
 # SKOLKOVO_CODE = 3678
-# LIKE_CODE = 2267
+# NETOLOGY_CODE = 2267
 
 # SMART_CODE = 3934
 # SOE_CODE = 3578
@@ -20,6 +20,7 @@ sessions = []
 # COUCH_CODE = 4563
 # MENTOR_CODE = 4239
 # EXPERT_CODE = 4104
+# TUTOR_CODE = 4978
 
 # ADD1_CODE = 9255
 # ADD2_CODE = 9923
@@ -53,19 +54,21 @@ def identify_company(name):
         return players.entspace
     elif name == 'skolkovo':
         return players.skolkovo
-    elif name == 'like':
+    elif name == 'netology':
         return players.like
-    elif name == 'наставник':
+    elif name == 'mentor':
         return players.mentor
-    elif name == 'коуч':
+    elif name == 'tutor':
+        return players.tutor
+    elif name == 'couch':
         return players.couch
-    elif name == 'эксперт':
+    elif name == 'expert':
         return players.expert
-    elif name == 'smart lab':
+    elif name == 'smart':
         return players.smart
-    elif name == 'school of education':
+    elif name == 'soe':
         return players.soe
-    elif name == 'тинькофф':
+    elif name == 'bank':
         return players.bank
-    elif name == 'российская инвестиционная компания':
+    elif name == 'investor':
         return players.investor

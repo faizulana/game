@@ -9,14 +9,16 @@ entspace = player.Player(name = 'Entspace', capital = 400, property = '',
 skolkovo = player.Player(name = 'Skolkovo', capital = 400, property = '',
                           technology1=False, technology2=False, technology3=False, audience=0, 
                           teacher = True, influencer = False, experts=1)
-like = player.Player(name = 'Like центр', capital = 400, property = '',
+netology = player.Player(name = 'Нетология', capital = 400, property = '',
                           technology1=False, technology2=False, technology3=False, audience=0, 
                           teacher = True, influencer = False, experts=0)
 couch = player.Player(name = 'Коуч', capital = 100, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher = False, influencer = True) #50
-mentor = player.Player(name = 'Наставник', capital = 100, property = '', technology1=False, experts=0,
+mentor = player.Player(name = 'Ментор', capital = 100, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher = False, influencer = True)
 expert = player.Player(name = 'Эксперт', capital = 100, property = '', technology1=False, experts=0,
+                      technology2=False, technology3=False, audience=50, teacher=False, influencer = True)
+tutor = player.Player(name = 'Наставник', capital = 100, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher=False, influencer = True)
 soe = player.Player(name = 'School of Education', capital = 100, property = '', experts=0,
                     technology1=False, technology2=False, technology3=False, audience= 0, influencer=False, teacher=True) #50   develop 150
@@ -34,12 +36,12 @@ add2 = player.Player(name = 'Новая компания', capital=0, property='
 add3 = player.Player(name = 'Новая компания', capital=0, property='', experts=0,
                   technology1=False, technology2=False, technology3=False, audience=0, teacher=False, influencer=False)
 
-companies=[entspace, skillbox, skolkovo, like, bank, investor, smart, soe, mentor, couch, expert, add1, add2, add3]
+companies=[entspace, skillbox, skolkovo, netology, bank, investor, smart, soe, mentor, couch, expert, tutor, add1, add2, add3]
 
 def expences():
     skolkovo.capital-=150
     entspace.capital-=150
-    like.capital-=150
+    netology.capital-=150
     skillbox.capital-=150
     couch.capital-=50
     couch.audience-=couch.audience*0.2

@@ -25,12 +25,11 @@ class Player:
             return f'Перевод выполнен. Ваш баланс {self.capital} у.е.'
     
     def check_capital(self):
-        ans = f'Ваш баланс {self.capital} у.е.\n\nТехнологии:\n'
+        ans = f'Баланс {self.capital} у.е.\n\nТехнологии:\n'
         if self.technology1: ans+='Название технологии 1\n'
         if self.technology1: ans+='Название технологии 1\n'
         if self.technology1: ans+='Название технологии 1\n'
-        if len(self.property) > 3:
-            ans+= f'Другое имущество: {self.property}\n\n'
+        ans+='Имущество:\n'
         if self.course>0:
             ans+='Один курс\n'
         if self.mentorship>0:
@@ -45,6 +44,8 @@ class Player:
             ans+=f'{self.experts} свободных команд экспертов для создания сложных продуктов\n\n'
         if self.influencer == True:
             ans+=f'Личная аудитория {self.audience} человек\n'
+        if len(self.property) > 3:
+            ans+= f'Другое имущество: {self.property}\n\n'
         return ans
     
 class IT (Player):

@@ -2,19 +2,16 @@ from authentication import identify_company
 
 def process_message(company, text):
     components=str(text).lower().split()
-    if components[0] == 'перевод':
-        receiver = identify_company(components[1])
-        answer = company.transfer_money(amount=int(components[2]), to=receiver)
+    if components[0] == 'перевести':
+        receiver = identify_company(components[3])
+        answer = company.transfer_money(amount=int(components[1]), to=receiver)
         return answer
-    
-    elif components[0] == 'капитал':
-        return company.check_capital()
     
     elif components[0] == 'создать':
 
         if components[1] == 'курс':
-            if company.influencer==False:
-                return 'У вас нет инфлюенсера для создания курса'
+            if company.course>0:
+                return 'У вас уже есть курс для реализации в этом такте'
             else:
                 if company.technology1 == False:
                     company.capital-= 8
@@ -23,8 +20,8 @@ def process_message(company, text):
                 return 'курс создан'
         
         if components[1] == 'наставничество':
-            if company.influencer==False:
-                return 'У вас нет инфлюенсера для создания наставничества'
+            if company.mentorship>0:
+                return 'У вас уже есть наставничество для реализации в этом такте'
             else:
                 if company.technology1 == False:
                     company.capital-= 8
@@ -76,7 +73,7 @@ def process_message(company, text):
         
         if components[1] == 'эксперты':
             if company.capital >= 150:
-                company.property+=' команда экспертов'
+                company.experts+=1
                 return 'Команда экспертов создана'
             else: return 'Недостаточно средств для создания'
 

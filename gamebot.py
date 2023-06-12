@@ -13,29 +13,45 @@ bot = telebot.TeleBot("6009093323:AAGvxCnZm7VYWtqFluSNEqzFVMt2QpJp9FQ", parse_mo
 admin_id = 861236842
 
 audience = 1000
-NAMES = ['entspace', 'skolkovo']
-
-requests = {}
-
-def text_normalize (text):
-    words = str(text).lower()
+names = ['entspace', 'skolkovo', 'skillbox', 'netology', 'couch', 'mentor', 'tutor', 'expert', 
+         'bank', 'investor', 'soe', 'smart']
 
 def give_answer (message):
-    ans = 'Заявка принята в обработку'
+    ans = 'В обработке'
     bot.reply_to(message, ans)
 
 def is_auto(text):
-    if re.match(r'перевод|капитал|создать', str(text).lower()) is not None:
+    if re.match(r'перевести|создать', str(text).lower()) is not None:
         return True
     else: return False
 
-def action_markup():
+def action_markup(company):
     markup = types.InlineKeyboardMarkup()
     markup.row_width = 2
     # действия в зависимости от роли
     markup.add(types.InlineKeyboardButton("Перевести деньги", callback_data="перевод"),
                                types.InlineKeyboardButton("Проверить состояние", callback_data="капитал"),
-                               types.InlineKeyboardButton("Создать курс для аудитории", callback_data="курс"))
+                               )
+    if company.influencer == True:
+        markup.add(types.InlineKeyboardButton("Создать курс для аудитории", callback_data="курс"),
+                   types.InlineKeyboardButton("Создать наставничество", callback_data="наставничество"),
+                   types.InlineKeyboardButton("Реализовать на свою аудиторию", callback_data="реализовать"),
+                   types.InlineKeyboardButton("Купить аудиторию", callback_data="купить"),)
+    if company.teacher == True:
+        markup.add(types.InlineKeyboardButton("Создать простой продукт", callback_data="простой"),
+                   types.InlineKeyboardButton("Создать сложный продукт", callback_data="сложный"),
+                   types.InlineKeyboardButton("Продать свободной аудитории", callback_data="продать"),)
+    if company.name == 'Smart Lab':
+        markup.add(types.InlineKeyboardButton("Разработать технологию 1", callback_data="технология1"),
+                   types.InlineKeyboardButton("Разработать технологию 2", callback_data="технология2"),
+                   types.InlineKeyboardButton("Разработать технологию 3", callback_data="технология3"),
+                   types.InlineKeyboardButton("Внедрить технологию игроку", callback_data="внедрить"),
+                   )
+    if company.name == 'School of Education':
+        markup.add(types.InlineKeyboardButton("Создать команду", callback_data="эксперты"),
+                   types.InlineKeyboardButton("Обучить другого игрока", callback_data="обучить"),
+                   types.InlineKeyboardButton("Передать команду экспертов", callback_data="передать"),
+                   )
     return markup
 
 def company_markup():
@@ -43,10 +59,11 @@ def company_markup():
     markup.row_width = 2
     markup.add(types.InlineKeyboardButton("Entspace", callback_data="entspace"),
                                types.InlineKeyboardButton("Сколково", callback_data="skolkovo"),
-                               types.InlineKeyboardButton("Лайк Центр", callback_data="like"),
-                               types.InlineKeyboardButton("Скиллбокс", callback_data="entspace"),
+                               types.InlineKeyboardButton("Нетология", callback_data="netology"),
+                               types.InlineKeyboardButton("Скиллбокс", callback_data="skillbox"),
                                types.InlineKeyboardButton("Коуч", callback_data="couch"),
-                               types.InlineKeyboardButton("Наставник", callback_data="mentor"),
+                               types.InlineKeyboardButton("Наставник", callback_data="tutor"),
+                               types.InlineKeyboardButton("Ментор", callback_data="mentor"),
                                types.InlineKeyboardButton("Эксперт", callback_data="expert"),
                                types.InlineKeyboardButton("Тинькофф банк", callback_data="bank"),
                                types.InlineKeyboardButton("Российская Инвестиционная Компания", callback_data="investor"),
@@ -66,7 +83,7 @@ def start(message):
     btn2 = types.KeyboardButton("Совершить действие")
     btn3 = types.KeyboardButton("Мое состояние")
     markup.add(btn1, btn2, btn3)
-    bot.send_message(message.chat.id, "Привет! Я бот для совершения действия в игре. Введите проверочный код, выданный вам игротехником:", reply_markup=markup)
+    bot.send_message(message.chat.id, "Привет! Я бот для совершения действия в игре. \n\nВведите проверочный код, выданный вам игротехником:", reply_markup=markup)
     
 
 # @bot.message_handler(func=lambda message: message.chat.id != admin_id)
@@ -82,15 +99,13 @@ def answer_message(message):
     
     elif (message.text == 'Совершить действие'):
         company = a.authorize(message.chat.id)
-        bot.reply_to(message, 'Выберите действие', reply_markup=action_markup())
-
-        #кнопки в зависимости от типа
+        bot.reply_to(message, 'Выберите действие', reply_markup=action_markup(company))
     else:
         check = is_auto(message.text)
         if check is not False:
-            #продолжаем вопрошать
             give_answer(message)
-            #bot.reply_to(message, process_message(message.text))
+            company=a.authorize(message.chat.id)
+            bot.reply_to(message, auto.process_message(company=company, text=message.text))
 
         else:
             bot.reply_to(message, f'{message.from_user.first_name}, ваш запрос на обработке у игротехника')
@@ -101,21 +116,75 @@ def answer_message(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    if call.data == "перевод":
-        requests[call.message.chat.id] = 'перевод '
-        bot.send_message(call.message.chat.id, 'Кому?', reply_markup=company_markup())
-        bot.answer_callback_query(call.id, "Следуйте инструкциям")
-    elif call.data == "капитал":
-        chat_id = call.message.chat.id
-        bot.send_message(chat_id, a.authorize(chat_id).check_capital())
+    chat_id = call.message.chat.id
+    if call.data == "капитал":
+        bot.send_message(chat_id, 'Какой компании?', reply_markup=company_markup())
+        bot.answer_callback_query(call.id, "Выберите компанию из списка")
+    elif call.data == "перевод":
+        bot.send_message(chat_id, 'Введите сообщение вида "перевести *число* компании *название*"')
     elif call.data == "курс":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать курс')
         bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} создал курс: {ans}')
-    elif call.data in NAMES:
-        requests[call.message.chat.id] += call.data
-        bot.send_message(call.message.chat.id, 'Сколько?')
+        bot.send_message(admin_id, f'{company.name} заявка на курс: {ans}')
+    elif call.data == "наставничество":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать наставничество')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на наставничество: {ans}')
+    elif call.data == "простой":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать простой')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на простой продукт: {ans}')
+    elif call.data == "сложный":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать сложный')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на сложный продукт: {ans}')
+    elif call.data == "технология1":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать технология1')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 1: {ans}')
+    elif call.data == "технология2":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать технология2')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 2: {ans}')
+    elif call.data == "технология3":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать технология3')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 3: {ans}')
+    elif call.data == "эксперты":
+        company = a.authorize(call.message.chat.id)
+        ans = auto.process_message(company, 'создать эксперты')
+        bot.send_message(call.message.chat.id, ans)
+        bot.send_message(admin_id, f'{company.name} заявка на создание команды экспертов: {ans}')
+    elif call.data == "обучить":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "обучить игрока *название компании или инфлюенсера*"')
+    elif call.data == "купить":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "купить *число* аудитории')
+    elif call.data == "передать":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "передать экспертов *название компании-получателя*')
+    elif call.data == "продать":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "продать простой/сложный на *число* аудитории"')
+    elif call.data == "реализовать":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "реализовать *тип продукта*')
+    elif call.data == "внедрить":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Напишите сообщение вида "внерить *название или номер технологии* *название компании-получателя*')
+
+    elif call.data in names:
+        companytocheck = a.identify_company(call.data)
+        bot.send_message(chat_id, companytocheck.check_capital())
+
     else: 
         bot.send_message(call.message.chat.id, 'Вижу', reply_markup=company_markup())
 
