@@ -52,6 +52,7 @@ def action_markup(company):
                    types.InlineKeyboardButton("Обучить другого игрока", callback_data="обучить"),
                    types.InlineKeyboardButton("Передать команду экспертов", callback_data="передать"),
                    )
+    markup.add(types.InlineKeyboardButton("Другое", callback_data="другое"),)
     return markup
 
 def company_markup():
@@ -90,8 +91,8 @@ def start(message):
     bot.send_message(message.chat.id, "Привет! Я бот для совершения действия в игре. \n\nВведите проверочный код, выданный вам игротехником:", reply_markup=markup)
     
 
-# @bot.message_handler(func=lambda message: message.chat.id != admin_id)
-@bot.message_handler(func=lambda message: message.chat.id == admin_id)
+@bot.message_handler(func=lambda message: message.chat.id != admin_id)
+#@bot.message_handler(func=lambda message: message.chat.id == admin_id)
 def answer_message(message):
 
     if message.text in a.codes.keys():
@@ -126,7 +127,7 @@ def callback_query(call):
         bot.send_message(chat_id, 'Какой компании?', reply_markup=company_markup())
         bot.answer_callback_query(call.id, "Выберите компанию из списка")
     elif call.data == "перевод":
-        bot.send_message(chat_id, 'Введите сообщение вида "перевести *число* *компания-получатель*"')
+        bot.send_message(chat_id, 'Введите сообщение вида: \nперевести *число* *компания-получатель*')
     elif call.data == "курс":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать курс')
@@ -169,39 +170,42 @@ def callback_query(call):
         bot.send_message(admin_id, f'{company.name} заявка на создание команды экспертов: {ans}')
     elif call.data == "обучить":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "обучить игрока *название компании или инфлюенсера*"')
+        bot.send_message(chat_id, 'Напишите сообщение вида; \n\n"обучить игрока *название компании или инфлюенсера*"')
     elif call.data == "купить":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "купить *число* аудитории')
+        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"купить *число* аудитории')
     elif call.data == "передать":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "передать экспертов *название компании-получателя*')
+        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"передать экспертов *название компании-получателя*')
     elif call.data == "продать":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "продать простой/сложный на *число* аудитории"')
+        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"продать простой/сложный на *число* аудитории"')
     elif call.data == "реализовать":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "реализовать *тип продукта*')
+        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"реализовать *тип продукта* свой или *название компании*')
     elif call.data == "внедрить":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида "внерить *название или номер технологии* *название компании-получателя*')
+        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"внерить *название или номер технологии* *название компании-получателя*')
+    elif call.data == "другое":
+        company = a.authorize(call.message.chat.id)
+        bot.send_message(chat_id, 'Опишите детали своего запроса, и я направлю его игротехнику')
 
     elif call.data in names:
         companytocheck = a.identify_company(call.data)
         bot.send_message(chat_id, companytocheck.check_capital())
 
     else: 
-        bot.send_message(call.message.chat.id, 'Вижу', reply_markup=company_markup())
+        bot.send_message(call.message.chat.id, 'Вижу, но не знаю что с этим делать. Напишите запрос текстом.', reply_markup=company_markup())
 
-#@bot.message_handler(func=lambda message: message.chat.id == admin_id)
-#def handle_admin (message):
-#    if re.match(r'!', str(message.text)) is not None:
-#        bot.reply_to(message, process_request(str(message.text)))
-#    else:
-#       bot.forward_message(chat_id=message.reply_to_message.forward_from.id,
-#                        from_chat_id=admin_id,
-#                        message_id=message.message_id)
-#       bot.reply_to(message, f'Your answer is sent to {message.reply_to_message.forward_from.username}')
+@bot.message_handler(func=lambda message: message.chat.id == admin_id)
+def handle_admin (message):
+   if re.match(r'!', str(message.text)) is not None:
+       bot.reply_to(message, admin.process_request(str(message.text)))
+   else:
+      bot.forward_message(chat_id=message.reply_to_message.forward_from.id,
+                       from_chat_id=admin_id,
+                       message_id=message.message_id)
+      bot.reply_to(message, f'Your answer is sent to {message.reply_to_message.forward_from.username}')
 
 
 
