@@ -9,8 +9,11 @@ import authorize as a
 import players
 import autoprocessing as auto
 
+takt = 1
+
 bot = telebot.TeleBot("6009093323:AAGvxCnZm7VYWtqFluSNEqzFVMt2QpJp9FQ", parse_mode=None)
 admin_id = 861236842
+helper_id = 861236842
 
 audience = 1000
 names = ['entspace', 'skolkovo', 'skillbox', 'netology', 'couch', 'mentor', 'tutor', 'expert', 
@@ -75,11 +78,12 @@ def company_markup():
           
 def request_markup():
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Done", callback_data="entspace"))
+    markup.add(types.InlineKeyboardButton("Done", callback_data="done"))
+    return markup
 
 @bot.message_handler(commands=['help'])
 def send_welcome(message):
-    bot.reply_to(message, "Объясняю как мной пользоваться. Можно сделать FAQ")
+    bot.reply_to(message, "Для совершения действия нажмите на кнопку внизу и выберите нужную команду из списка для получения инструкции. \n\nПроверить свое имущество и баланс можно нажав на кнопку Мое состояние внизу экрана \n\nНазвания комнапий можно писать кириллицей или латинницей. \n\nБудьте внимательны с командами перевода денег и создания продуктов, опечатки могут помешать обработать вашизапросы")
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -91,16 +95,22 @@ def start(message):
     bot.send_message(message.chat.id, "Привет! Я бот для совершения действия в игре. \n\nВведите проверочный код, выданный вам игротехником:", reply_markup=markup)
     
 
-@bot.message_handler(func=lambda message: message.chat.id != admin_id)
-#@bot.message_handler(func=lambda message: message.chat.id == admin_id)
+#@bot.message_handler(func=lambda message: message.chat.id != admin_id)
+@bot.message_handler(func=lambda message: message.chat.id == admin_id)
 def answer_message(message):
 
     if message.text in a.codes.keys():
         a.authenticate(message)
         bot.reply_to(message, f'Вы вошли как {a.authorize(message.chat.id).name}. Теперь все ваши действия будут происходить от его имени')
-    
+
+    elif message.text == a.ADMIN_CODE:
+        global helper_id
+        helper_id = int(message.text)
+        bot.send_message(helper_id, 'Теперь вам будут приходить сообщения о важных событиях')
+        a.admins.append()
     elif (message.text == 'Мое состояние'):
-        bot.reply_to(message, a.authorize(message.chat.id).check_capital())   
+        bot.reply_to(message, a.authorize(message.chat.id).check_capital())
+        bot.reply_to(message, f'Свободная аудитория в данный момент: {audience}')  
     
     elif (message.text == 'Совершить действие'):
         company = a.authorize(message.chat.id)
@@ -110,7 +120,9 @@ def answer_message(message):
         check = is_auto(message.text)
         if check is not False:
             give_answer(message)
-            bot.reply_to(message, auto.process_message(company=company, text=message.text))
+            ans = auto.process_message(company=company, text=message.text)
+            bot.reply_to(message, ans)
+            bot.send_message(helper_id, f'{company.name}: {message.text}: {ans}')
 
         else:
             bot.reply_to(message, f'{message.from_user.first_name}, ваш запрос на обработке у игротехника')
@@ -118,7 +130,7 @@ def answer_message(message):
                 chat_id=admin_id,
                 from_chat_id=message.chat.id,
                 message_id=message.message_id)
-            bot.send_message(chat_id=admin_id, text=f'От {company.name}', reply_markup=request_markup())
+            bot.send_message(chat_id=admin_id, text=f'От {company.name}, баланс {company.capital}, т1: {company.technology2}, т2: {company.technology3}, аудитория {company.audience}', reply_markup=request_markup())
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
@@ -127,27 +139,19 @@ def callback_query(call):
         bot.send_message(chat_id, 'Какой компании?', reply_markup=company_markup())
         bot.answer_callback_query(call.id, "Выберите компанию из списка")
     elif call.data == "перевод":
-        bot.send_message(chat_id, 'Введите сообщение вида: \nперевести *число* *компания-получатель*')
+        bot.send_message(chat_id, 'Вы собираетесь сделать перевод. Для этого введите сообщение вида: \nперевести *число* *компания-получатель*')
     elif call.data == "курс":
         company = a.authorize(call.message.chat.id)
-        ans = auto.process_message(company, 'создать курс')
-        bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} заявка на курс: {ans}')
+        bot.send_message(chat_id, 'Вы собираетесь создать курс. Чтобы подтвердить действие, введите сообщение вида: \nсоздать курс')
     elif call.data == "наставничество":
         company = a.authorize(call.message.chat.id)
-        ans = auto.process_message(company, 'создать наставничество')
-        bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} заявка на наставничество: {ans}')
+        bot.send_message(chat_id, 'Вы собираетесь создать наставничество. Чтобы подтвердить действие, введите сообщение вида: \nсоздать наставничество')
     elif call.data == "простой":
         company = a.authorize(call.message.chat.id)
-        ans = auto.process_message(company, 'создать простой')
-        bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} заявка на простой продукт: {ans}')
+        bot.send_message(chat_id, 'Вы собираетесь создать простой продукт. Чтобы подтвердить действие, введите сообщение вида: \nсоздать простой')
     elif call.data == "сложный":
         company = a.authorize(call.message.chat.id)
-        ans = auto.process_message(company, 'создать сложный')
-        bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} заявка на сложный продукт: {ans}')
+        bot.send_message(chat_id, 'Вы собираетесь создать сложный продукт. Чтобы подтвердить действие, введите сообщение вида: \nсоздать сложный')
     elif call.data == "технология1":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать технология1')
@@ -159,10 +163,13 @@ def callback_query(call):
         bot.send_message(call.message.chat.id, ans)
         bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 2: {ans}')
     elif call.data == "технология3":
-        company = a.authorize(call.message.chat.id)
-        ans = auto.process_message(company, 'создать технология3')
-        bot.send_message(call.message.chat.id, ans)
-        bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 3: {ans}')
+        if admin.takt == 1: 
+            bot.answer_callback_query(call.id, 'Эта технология станет доступна только во втором такте')
+        else: 
+            company = a.authorize(call.message.chat.id)
+            ans = auto.process_message(company, 'создать технология3')
+            bot.send_message(call.message.chat.id, ans)
+            bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 3: {ans}')
     elif call.data == "эксперты":
         company = a.authorize(call.message.chat.id)
         ans = auto.process_message(company, 'создать эксперты')
@@ -170,7 +177,7 @@ def callback_query(call):
         bot.send_message(admin_id, f'{company.name} заявка на создание команды экспертов: {ans}')
     elif call.data == "обучить":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида; \n\n"обучить игрока *название компании или инфлюенсера*"')
+        bot.send_message(chat_id, 'Вы собираетесь обучить игрока - это значит, что он получит право создавать простые образовательные продукты. \nЧтобы сделать это, напишите сообщение вида: \n\n"обучить игрока *название компании или инфлюенсера*"')
     elif call.data == "купить":
         company = a.authorize(call.message.chat.id)
         bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"купить *число* аудитории')
@@ -179,7 +186,8 @@ def callback_query(call):
         bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"передать экспертов *название компании-получателя*')
     elif call.data == "продать":
         company = a.authorize(call.message.chat.id)
-        bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"продать простой/сложный на *число* аудитории"')
+        bot.send_message(chat_id, 'Вы собираетесь продать простой или сложный продукт на свободный рынок. Помните, что для привлечения аудитории на этот продукт вы должны будете сначала оплатить услуги маркетинга по 2 у.е. за человека, если продукт простой, и по 4 у.е. за человека, если продукт сложный')
+        bot.send_message(chat_id, 'Чтобы реализовать продукт на рынок, введите сообщение вида: \n\n"продать простой/сложный на *число* аудитории"')
     elif call.data == "реализовать":
         company = a.authorize(call.message.chat.id)
         bot.send_message(chat_id, 'Напишите сообщение вида: \n\n"реализовать *тип продукта* свой или *название компании*')
@@ -189,6 +197,8 @@ def callback_query(call):
     elif call.data == "другое":
         company = a.authorize(call.message.chat.id)
         bot.send_message(chat_id, 'Опишите детали своего запроса, и я направлю его игротехнику')
+    elif call.data == "done":
+        bot.delete_message(chat_id=admin_id, message_id=call.message.message_id)
 
     elif call.data in names:
         companytocheck = a.identify_company(call.data)
@@ -199,12 +209,17 @@ def callback_query(call):
 
 @bot.message_handler(func=lambda message: message.chat.id == admin_id)
 def handle_admin (message):
-   if re.match(r'!', str(message.text)) is not None:
+    if re.match(r'!', str(message.text)) is not None:
        bot.reply_to(message, admin.process_request(str(message.text)))
-   else:
-      bot.forward_message(chat_id=message.reply_to_message.forward_from.id,
-                       from_chat_id=admin_id,
-                       message_id=message.message_id)
+    elif message.text == 'отбивка':
+        global takt
+        players.expences()
+        takt+=1
+        for s in a.sessions:
+            bot.send_message(s.chat_id, 'Такт завершен. Дождитесь итогов такта')
+    else:
+      bot.send_message(chat_id=message.reply_to_message.forward_from.id,
+                     text = message.text)
       bot.reply_to(message, f'Your answer is sent to {message.reply_to_message.forward_from.username}')
 
 

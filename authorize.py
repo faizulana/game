@@ -6,7 +6,9 @@ codes = {'2464':players.entspace, '2678':players.skillbox, '2267':players.netolo
          '9255':players.add1, '9923':players.add2, '9791':players.add3,
          }
 sessions = []
+admins=[861236842]
 
+ADMIN_CODE = 98403
 # ENTSPACE_CODE = 2464
 # SKOLKOVO_CODE = 3678
 # NETOLOGY_CODE = 2267
@@ -50,21 +52,21 @@ def authorize (chat_id):
 def identify_company(name):
     if name in ['skillbox', 'skill', 'скилбокс', 'скиллбокс', 'скил', 'скилл', 'скиллбоксу', 'скилбоксу', 'скил-бокс', 'скилл-бокс']:
         return players.skillbox
-    elif name in ['entspace', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс']:
+    elif name in ['entspace', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс', 'ент', 'энт']:
         return players.entspace
-    elif name in ['сколково', 'skolkovo', 'scolcovo', 'scolkovo', 'мшу']:
+    elif name in ['сколково', 'skolkovo', 'scolcovo', 'scolkovo', 'мшу', 'скол']:
         return players.skolkovo
-    elif name in ['нетология', 'нетологи', 'netology', 'netologia', 'нэтология']:
+    elif name in ['нетология', 'нетологи', 'netology', 'netologia', 'нэтология', 'нет']:
         return players.like
     elif name in ['ментор', 'mentor']:
         return players.mentor
-    elif name in ['tutor', 'nastavnik', 'наставник', 'наставни', 'тьютор']:
+    elif name in ['tutor', 'nastavnik', 'наставник', 'наставни', 'тьютор', 'тютор']:
         return players.tutor
-    elif name in ['коуч', 'коучер', 'кауч', 'couch']:
+    elif name in ['коуч', 'коучер', 'кауч', 'couch', 'коч']:
         return players.couch
-    elif name in ['expert', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс']:
+    elif name in ['expert', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс', 'ент', 'энт']:
         return players.expert
-    elif name in ['smart', 'lab', 'smartlab', 'smart_lab', 'smart-lab', 'энтспэйс']:
+    elif name in ['smart', 'lab', 'smartlab', 'smart_lab', 'smart-lab', 'смарт', 'лаб']:
         return players.smart
     elif name in ['school', 'soe', 'schoolofeducation', 'school-of-education', 'школа', 'сое', 'школа-образования']:
         return players.soe

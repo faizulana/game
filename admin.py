@@ -1,5 +1,4 @@
 from authorize import identify_company
-from players import expences
 
 def process_request(text):
     components = str(text).lower().split()
@@ -13,15 +12,15 @@ def process_request(text):
             company = identify_company(components[2])
             company.capital+=int(components[3])
             return company.capital
-        if components[1] == 'технология1':
+        if components[1] == 'тех1':
             company = identify_company(components[2])
             company.technology1=True
             return company.technology1
-        if components[1] == 'технология2':
+        if components[1] == 'тех2':
             company = identify_company(components[2])
             company.technology2=True
             return company.technology2
-        if components[1] == 'технология3':
+        if components[1] == 'тех3':
             company = identify_company(components[2])
             company.technology3=True
             return company.technology3      
@@ -81,12 +80,12 @@ def process_request(text):
             company = identify_company(components[2])
             company.audience=int(components[3])
             return company.audience
-        if components[1] == 'экспертность':
+        if components[1] == 'учитель':
             company = identify_company(components[2])
             if company.teacher== True: company.teacher=False
             elif company.teacher==False: company.teacher=True
             return company.teacher
-        if components[1] == 'инфлюенсерство':
+        if components[1] == 'инфл':
             company = identify_company(components[2])
             if company.influencer== True: company.influencer=False
             elif company.influencer==False: company.influencer=True
@@ -95,13 +94,10 @@ def process_request(text):
 
     elif components[0] == '!состояние':
         company = identify_company(components[1])
-        return f'{str(company.capital)} у.е., {str(company.property)}, технология {str(company.technology)}, аудитория {str(company.audience)} '
+        return f'{company.check_capital()} \nучит {company.teacher}'
     elif components[0] == '!аудитория':
         if len(components) > 1:
             global audience
             audience+=int(components[1])
             return f'аудитория {str(audience)}'
         else: return audience
-    elif components[0] == '!отбивка':
-        expences()
-        return f'Такт завершен. Свободная аудитория в следующем такте {audience}'

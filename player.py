@@ -26,16 +26,20 @@ class Player:
     
     def check_capital(self):
         ans = f'Баланс {self.capital} у.е.\n\nТехнологии:\n'
-        if self.technology1: ans+='Название технологии 1\n'
-        if self.technology1: ans+='Название технологии 1\n'
-        if self.technology1: ans+='Название технологии 1\n'
+        if self.technology1: ans+='Автоматизация производства продукта\n'
+        if self.technology2: ans+='Предиктивная аналитика\n'
+        if self.technology3: ans+='Замена экспертов на ИИ\n'
         ans+='Имущество:\n'
-        if self.course>0:
+        if self.course==1:
             ans+='Один курс\n'
+        if self.course>1:
+            ans+=f'{self.course} курса\n'
         if self.mentorship>0:
             ans+='Одно наставничество\n'
-        if self.simple>0:
+        if self.simple==1:
             ans+='Один простой продукт\n'
+        if self.simple>1:
+            ans+=f'{self.simple} простых продукта\n'
         if self.complex==1:
             ans+='Один сложный продукт\n'
         if self.complex>1:

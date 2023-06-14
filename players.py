@@ -12,13 +12,13 @@ skolkovo = player.Player(name = 'Skolkovo', capital = 400, property = '',
 netology = player.Player(name = 'Нетология', capital = 400, property = '',
                           technology1=False, technology2=False, technology3=False, audience=0, 
                           teacher = True, influencer = False, experts=0)
-couch = player.Player(name = 'Коуч', capital = 100, property = '', technology1=False, experts=0,
+couch = player.Player(name = 'Коуч', capital = 60, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher = False, influencer = True) #50
-mentor = player.Player(name = 'Ментор', capital = 100, property = '', technology1=False, experts=0,
+mentor = player.Player(name = 'Ментор', capital = 60, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher = False, influencer = True)
-expert = player.Player(name = 'Эксперт', capital = 100, property = '', technology1=False, experts=0,
+expert = player.Player(name = 'Эксперт', capital = 60, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher=False, influencer = True)
-tutor = player.Player(name = 'Наставник', capital = 100, property = '', technology1=False, experts=0,
+tutor = player.Player(name = 'Наставник', capital = 60, property = '', technology1=False, experts=0,
                       technology2=False, technology3=False, audience=50, teacher=False, influencer = True)
 soe = player.Player(name = 'School of Education', capital = 100, property = '', experts=0,
                     technology1=False, technology2=False, technology3=False, audience= 0, influencer=False, teacher=True) #50   develop 150
@@ -39,8 +39,8 @@ add3 = player.Player(name = 'Новая компания', capital=0, property='
 companies=[entspace, skillbox, skolkovo, netology, bank, investor, smart, soe, mentor, couch, expert, tutor, add1, add2, add3]
 
 def expences():
-    skolkovo.capital-=150
-    entspace.capital-=150
+    skolkovo.capital-=120
+    entspace.capital-=120
     netology.capital-=150
     skillbox.capital-=150
     couch.capital-=50
@@ -59,3 +59,6 @@ def expences():
         if company.complex>0:
             company.experts+=int(company.complex)
             company.complex=0
+        if company.experts>0:
+            company.capital-=company.experts*30
+        
