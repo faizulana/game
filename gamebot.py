@@ -217,6 +217,7 @@ def handle_admin (message):
         takt+=1
         for s in a.sessions:
             bot.send_message(s.chat_id, 'Такт завершен. Дождитесь итогов такта')
+            bot.send_message(admin_id, f'{s.company.name}: {s.company.capital}, {s.company.audience}')
     else:
       bot.send_message(chat_id=message.reply_to_message.forward_from.id,
                      text = message.text)

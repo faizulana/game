@@ -89,8 +89,7 @@ def process_request(text):
             company = identify_company(components[2])
             if company.influencer== True: company.influencer=False
             elif company.influencer==False: company.influencer=True
-            return company.influencer
-        
+            return company.influencer        
 
     elif components[0] == '!состояние':
         company = identify_company(components[1])
