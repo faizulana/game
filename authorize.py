@@ -1,7 +1,7 @@
 import players
 
 codes = {'2464':players.entspace, '2678':players.skillbox, '2267':players.netology, '3934':players.smart, 
-         '3578':players.soe, '8937':players.bank, '4978':players.tutor,
+         '3578':players.soe, '8937':players.bank, '4978':players.tutor, '3679':players.skolkovo,
          '8476':players.investor, '4563':players.couch, '4239':players.mentor, '4104':players.expert,
          '9255':players.add1, '9923':players.add2, '9791':players.add3,
          }
@@ -10,8 +10,9 @@ admins=[861236842]
 
 ADMIN_CODE = 98403
 # ENTSPACE_CODE = 2464
-# SKOLKOVO_CODE = 3678
+# SKOLKOVO_CODE = 3679
 # NETOLOGY_CODE = 2267
+# SKILLBOX_CODE = 2678
 
 # SMART_CODE = 3934
 # SOE_CODE = 3578
@@ -52,21 +53,21 @@ def authorize (chat_id):
 def identify_company(name):
     if name in ['skillbox', 'skill', 'скилбокс', 'скиллбокс', 'скил', 'скилл', 'скиллбоксу', 'скилбоксу', 'скил-бокс', 'скилл-бокс']:
         return players.skillbox
-    elif name in ['entspace', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс', 'ент', 'энт']:
+    elif name in ['entspace', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс', 'ент', 'энт', 'энтспейсу', ]:
         return players.entspace
     elif name in ['сколково', 'skolkovo', 'scolcovo', 'scolkovo', 'мшу', 'скол']:
         return players.skolkovo
     elif name in ['нетология', 'нетологи', 'netology', 'netologia', 'нэтология', 'нет']:
-        return players.like
-    elif name in ['ментор', 'mentor']:
+        return players.netology
+    elif name in ['ментор', 'mentor', 'м']:
         return players.mentor
-    elif name in ['tutor', 'nastavnik', 'наставник', 'наставни', 'тьютор', 'тютор']:
+    elif name in ['tutor', 'nastavnik', 'наставник', 'наставни', 'тьютор', 'тютор', 'н']:
         return players.tutor
     elif name in ['коуч', 'коучер', 'кауч', 'couch', 'коч']:
         return players.couch
-    elif name in ['expert', 'ent', 'ентспейс', 'ентспэйс', 'энтспейс', 'энтспэйс', 'ент', 'энт']:
+    elif name in ['expert', 'эксперт', 'экс', ]:
         return players.expert
-    elif name in ['smart', 'lab', 'smartlab', 'smart_lab', 'smart-lab', 'смарт', 'лаб']:
+    elif name in ['smart', 'lab', 'smartlab', 'smart_lab', 'smart-lab', 'смарт', 'лаб', 'смартлаб']:
         return players.smart
     elif name in ['school', 'soe', 'schoolofeducation', 'school-of-education', 'школа', 'сое', 'школа-образования']:
         return players.soe

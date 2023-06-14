@@ -44,11 +44,13 @@ def expences():
     netology.capital-=150
     skillbox.capital-=150
     couch.capital-=50
-    couch.audience-=couch.audience*0.2
+    couch.audience-=round(couch.audience*0.2)
     mentor.capital-=50
-    mentor.audience-=couch.audience*0.2
+    mentor.audience-=round(couch.audience*0.2)
+    tutor.capital-=50
+    tutor.audience-=round(couch.audience*0.2)
     expert.capital-=50
-    expert.audience-=couch.audience*0.2
+    expert.audience-=round(couch.audience*0.2)
     smart.capital-=50
     soe.capital-=50
     bank.capital-=100

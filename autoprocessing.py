@@ -4,8 +4,11 @@ def process_message(company, text):
     components=str(text).lower().split()
     if components[0] == 'перевести':
         receiver = identify_company(components[2])
-        answer = company.transfer_money(amount=int(components[1]), to=receiver)
-        return answer
+        if receiver is None:
+            return 'Не удалось распознать компанию-получателя. Пожалуйста, убедитесь что название написано верно и сумма указана цифрой без указания единиц.'
+        else:
+            answer = company.transfer_money(amount=int(components[1]), to=receiver)
+            return answer
     
     elif components[0] == 'создать':
 
@@ -67,26 +70,27 @@ def process_message(company, text):
             if company.capital >= 100:
                 company.technology1= True
                 company.property+='\nТехнология 1'
-                return 'Технология разработана и готова к внедрению'
+                return 'Технология "Автоматизация производства продукта" разработана и готова к внедрению'
             else: return 'У вас недостаточно средств для разработки'
         
         if components[1] == 'технология2':
             if company.capital >= 150:
                 company.technology2= True
                 company.property+='\nТехнология 2'
-                return 'Технология разработана и готова к внедрению'
+                return 'Технология "Предиктивная аналитика" разработана и готова к внедрению'
             else: return 'У вас недостаточно средств для разработки'
         
         if components[1] == 'технология3':
             if company.capital >= 200:
                 company.technology3= True
                 company.property+='\nТехнология 3'
-                return 'Технология разработана и готова к внедрению'
+                return 'Технология "Замена экспертов ИИ" разработана и готова к внедрению'
             else: return 'У вас недостаточно средств для разработки'
         
         if components[1] == 'эксперты':
             if company.capital >= 150:
                 company.experts+=1
+                company.capital-=150
                 return 'Команда экспертов создана'
             else: return 'У вас недостаточно средств для обучения экспертов'
 

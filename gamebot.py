@@ -45,9 +45,9 @@ def action_markup(company):
                    types.InlineKeyboardButton("Создать сложный продукт", callback_data="сложный"),
                    types.InlineKeyboardButton("Продать свободной аудитории", callback_data="продать"),)
     if company.name == 'Smart Lab':
-        markup.add(types.InlineKeyboardButton("Разработать технологию 1", callback_data="технология1"),
-                   types.InlineKeyboardButton("Разработать технологию 2", callback_data="технология2"),
-                   types.InlineKeyboardButton("Разработать технологию 3", callback_data="технология3"),
+        markup.add(types.InlineKeyboardButton("Автоматизация производства продукта", callback_data="технология1"),
+                   types.InlineKeyboardButton("Предиктивная аналитика", callback_data="технология2"),
+                   types.InlineKeyboardButton("Замена экспертов на ИИ", callback_data="технология3"),
                    types.InlineKeyboardButton("Внедрить технологию игроку", callback_data="внедрить"),
                    )
     if company.name == 'School of Education':
@@ -95,8 +95,8 @@ def start(message):
     bot.send_message(message.chat.id, "Привет! Я бот для совершения действия в игре. \n\nВведите проверочный код, выданный вам игротехником:", reply_markup=markup)
     
 
-#@bot.message_handler(func=lambda message: message.chat.id != admin_id)
-@bot.message_handler(func=lambda message: message.chat.id == admin_id)
+@bot.message_handler(func=lambda message: message.chat.id != admin_id)
+#@bot.message_handler(func=lambda message: message.chat.id == admin_id)
 def answer_message(message):
 
     if message.text in a.codes.keys():
@@ -163,7 +163,7 @@ def callback_query(call):
         bot.send_message(call.message.chat.id, ans)
         bot.send_message(admin_id, f'{company.name} заявка на разработку технологии 2: {ans}')
     elif call.data == "технология3":
-        if admin.takt == 1: 
+        if takt == 1: 
             bot.answer_callback_query(call.id, 'Эта технология станет доступна только во втором такте')
         else: 
             company = a.authorize(call.message.chat.id)
@@ -209,7 +209,7 @@ def callback_query(call):
 
 @bot.message_handler(func=lambda message: message.chat.id == admin_id)
 def handle_admin (message):
-    if re.match(r'!', str(message.text)) is not None:
+    if re.match(r'!|-|=', str(message.text)) is not None:
        bot.reply_to(message, admin.process_request(str(message.text)))
     elif message.text == 'отбивка':
         global takt
@@ -218,6 +218,9 @@ def handle_admin (message):
         for s in a.sessions:
             bot.send_message(s.chat_id, 'Такт завершен. Дождитесь итогов такта')
             bot.send_message(admin_id, f'{s.company.name}: {s.company.capital}, {s.company.audience}')
+    elif message.text == 'состояние':
+        for name in names:
+            bot.send_message(admin_id, f'{name}, {a.identify_company(name).capital}')
     else:
       bot.send_message(chat_id=message.reply_to_message.forward_from.id,
                      text = message.text)

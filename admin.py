@@ -2,29 +2,29 @@ from authorize import identify_company
 
 def process_request(text):
     components = str(text).lower().split()
-    if components[0] == '!добавить':
+    if components[0] == '=':    #добавить
         if components[1] == 'имущество':
             company = identify_company(components[2])
             company.property+=', '
             company.property+=' '.join(components[3::])
             return company.property
-        if components[1] == 'деньги':
+        if components[1] == 'д':
             company = identify_company(components[2])
             company.capital+=int(components[3])
             return company.capital
-        if components[1] == 'тех1':
+        if components[1] == 'т1':
             company = identify_company(components[2])
             company.technology1=True
             return company.technology1
-        if components[1] == 'тех2':
+        if components[1] == 'т2':
             company = identify_company(components[2])
             company.technology2=True
             return company.technology2
-        if components[1] == 'тех3':
+        if components[1] == 'т3':
             company = identify_company(components[2])
             company.technology3=True
             return company.technology3      
-        if components[1] == 'эксперты':
+        if components[1] == 'э':
             company = identify_company(components[2])
             company.experts+=1
             return company.experts
@@ -44,31 +44,31 @@ def process_request(text):
             company = identify_company(components[2])
             company.complex+=1
             return company.complex
-        if components[1] == 'аудитория':
+        if components[1] == 'а':
             company = identify_company(components[2])
             company.audience+=int(components[3])
             return company.audience
         
-    if components[0] == '!убрать':
-        if components[1] == 'деньги':
+    if components[0] == '-':  #убрать
+        if components[1] == 'д':
             company = identify_company(components[2])
             company.capital-=int(components[3])
             return company.capital
-        if components[1] == 'аудитория':
+        if components[1] == 'а':
             company = identify_company(components[2])
             company.audience-=int(components[3])
             return company.audience
-        if components[1] == 'эксперты':
+        if components[1] == 'э':
             company = identify_company(components[2])
             company.experts-=int(components[3])
             return company.experts
         
-    if components[0] == '!изменить':
+    if components[0] == '!':  #изменить
         if components[1] == 'имущество':
             company = identify_company(components[2])
             company.property=' '.join(components[3::])
             return company.property
-        if components[1] == 'деньги':
+        if components[1] == 'д':
             company = identify_company(components[2])
             company.capital=int(components[3])
             return company.capital
@@ -76,7 +76,7 @@ def process_request(text):
             company = identify_company(components[2])
             company.name=' '.join(components[3::])
             return company.name
-        if components[1] == 'аудитория':
+        if components[1] == 'а':
             company = identify_company(components[2])
             company.audience=int(components[3])
             return company.audience
@@ -91,7 +91,7 @@ def process_request(text):
             elif company.influencer==False: company.influencer=True
             return company.influencer        
 
-    elif components[0] == '!состояние':
+    elif components[0] == '!с':
         company = identify_company(components[1])
         return f'{company.check_capital()} \nучит {company.teacher}'
     elif components[0] == '!аудитория':
