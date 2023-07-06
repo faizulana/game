@@ -32,7 +32,7 @@ def process_request(text):
             company = identify_company(components[2])
             company.course+=1
             return company.course
-        if components[1] == 'наставничество':
+        if components[1] == 'н':
             company = identify_company(components[2])
             company.mentorship+=1
             return company.mentorship
